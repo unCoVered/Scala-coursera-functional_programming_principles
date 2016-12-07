@@ -1,5 +1,3 @@
-*.class
-*.log
 
 # sbt specific
 .cache
@@ -24,7 +22,7 @@ project/plugins/project/
 .idea/tasks.xml
 
 # Sensitive or high-churn files:
-*/.idea/*
+.idea/*
 .idea/dataSources/
 .idea/dataSources.ids
 .idea/dataSources.xml
