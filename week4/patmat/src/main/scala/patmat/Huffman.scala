@@ -26,9 +26,15 @@ object Huffman {
 
 
   // Part 1: Basics
-  def weight(tree: CodeTree): Int = ??? // tree match ...
+  def weight(tree: CodeTree): Int =  tree match {
+    case Fork(l, r, c, w) => weight(l) + weight(r)
+    case Leaf(c, w) => w
+  }
 
-  def chars(tree: CodeTree): List[Char] = ??? // tree match ...
+  def chars(tree: CodeTree): List[Char] = tree match {
+    case Fork(l, r, c, w) => chars(l) ::: chars(r)
+    case Leaf(c, w) => List(c)
+  }
 
   def makeCodeTree(left: CodeTree, right: CodeTree) =
     Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right))
@@ -70,7 +76,11 @@ object Huffman {
     * println("integer is  : "+ theInt)
     * }
     */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = {
+    // This methods return a Map(Char, Int], to get pairs we need to transform it to a List
+//    chars.groupBy(c => c).mapValues(_.length).toList
+    chars.groupBy(c => c).map(tuple => (tuple._1, tuple._2.length)).toList
+  }
 
   /**
     * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -79,12 +89,14 @@ object Huffman {
     * head of the list should have the smallest weight), where the weight
     * of a leaf is the frequency of the character.
     */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] =
+    freqs.map(x => Leaf(x._1, x._2)).sortWith((x, y) => x.weight < y.weight)
 
   /**
     * Checks whether the list `trees` contains only one single code tree.
     */
-  def singleton(trees: List[CodeTree]): Boolean = ???
+  def singleton(trees: List[CodeTree]): Boolean =
+    trees.size == 1
 
   /**
     * The parameter `trees` of this function is a list of code trees ordered
@@ -98,7 +110,15 @@ object Huffman {
     * If `trees` is a list of less than two elements, that list should be returned
     * unchanged.
     */
-  def combine(trees: List[CodeTree]): List[CodeTree] = ???
+  def combine(trees: List[CodeTree]): List[CodeTree] = {
+    if (trees.size < 2) trees
+    else insert(makeCodeTree((trees take 2).head, (trees take 2).last), (trees drop 2))
+  }
+
+  def insert(tree: CodeTree, trees: List[CodeTree]): List[CodeTree] = trees match {
+    case List() => List(tree)
+    case x :: xs => if (weight(tree) < weight(x)) tree :: trees else x :: insert(tree, xs)
+  }
 
   /**
     * This function will be called in the following way:
