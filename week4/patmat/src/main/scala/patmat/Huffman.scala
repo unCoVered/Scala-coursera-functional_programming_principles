@@ -76,11 +76,8 @@ object Huffman {
     * println("integer is  : "+ theInt)
     * }
     */
-  def times(chars: List[Char]): List[(Char, Int)] = {
-    // This methods return a Map(Char, Int], to get pairs we need to transform it to a List
-//    chars.groupBy(c => c).mapValues(_.length).toList
-    chars.groupBy(c => c).map(tuple => (tuple._1, tuple._2.length)).toList
-  }
+  // This methods return a Map(Char, Int), to get pairs we need to transform it to a List
+  def times(chars: List[Char]): List[(Char, Int)] =  chars.groupBy(c => c).map(tuple => (tuple._1, tuple._2.length)).toList
 
   /**
     * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -95,8 +92,7 @@ object Huffman {
   /**
     * Checks whether the list `trees` contains only one single code tree.
     */
-  def singleton(trees: List[CodeTree]): Boolean =
-    trees.size == 1
+  def singleton(trees: List[CodeTree]): Boolean = trees.size == 1
 
   /**
     * The parameter `trees` of this function is a list of code trees ordered
@@ -110,10 +106,9 @@ object Huffman {
     * If `trees` is a list of less than two elements, that list should be returned
     * unchanged.
     */
-  def combine(trees: List[CodeTree]): List[CodeTree] = {
-    if (trees.size < 2) trees
-    else insert(makeCodeTree((trees take 2).head, (trees take 2).last), (trees drop 2))
-  }
+  def combine(trees: List[CodeTree]): List[CodeTree] =
+    if (trees.size < 2) trees else insert(makeCodeTree((trees take 2).head, (trees take 2).last), trees drop 2)
+
 
   def insert(tree: CodeTree, trees: List[CodeTree]): List[CodeTree] = trees match {
     case List() => List(tree)
@@ -138,8 +133,7 @@ object Huffman {
     *  - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
     */
   def until(s: List[CodeTree] => Boolean, c: List[CodeTree] => List[CodeTree])(trees: List[CodeTree]): List[CodeTree] =
-    if (s(trees)) trees // If singleton -> trees
-    else (until(s, c))(c(trees)) // Until singleton -> combine(trees)
+    if (s(trees)) trees else until(s, c)(c(trees)) // If singleton -> Trees, Else Until singleton -> combine(trees)
 
   /**
     * This function creates a code tree which is optimal to encode the text `chars`.
@@ -178,7 +172,7 @@ object Huffman {
 
   /**
     * What does the secret message say? Can you decode it?
-    * For the decoding use the `frenchCode' Huffman tree defined above.
+    * For the decoding use the 'frenchCode' Huffman tree defined above.
     **/
   val secret: List[Bit] = List(0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1)
 
