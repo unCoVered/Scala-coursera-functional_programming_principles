@@ -44,7 +44,7 @@ abstract class TweetSet {
   def filter(p: Tweet => Boolean): TweetSet = filterAcc(p, new Empty)
   
   /**
-   * This is a helper method for `filter` that propagetes the accumulated tweets.
+   * This is a helper method for `filter` that propagates the accumulated tweets.
    */
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet
 
